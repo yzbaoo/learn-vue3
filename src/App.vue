@@ -2,10 +2,12 @@
 import { ref, reactive, computed,watch, onMounted,watchEffect,watchPostEffect,onUpdated, onBeforeUpdate,onBeforeMount } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import Count from './components/Count.vue'
+import DefineModel from './components/DefineModel.vue'
 
 const state = ref({
   count: 0
 })
+const text = ref('测试defineModel')
 
 watchPostEffect(() => {
   /* 在 Vue 更新后执行 */
@@ -57,6 +59,8 @@ const incrementCb = (count,a,b) => {
     </div>
 
     <Count :initialCount="999" @incrementCb="incrementCb"/>
+    <h1> {{text}} </h1>
+    <DefineModel v-model:title.trimAll="text"></DefineModel>
   </header>
 
 </template>
