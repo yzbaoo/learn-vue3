@@ -3,6 +3,7 @@ import { ref, reactive, computed,watch, onMounted,watchEffect,watchPostEffect,on
 import HelloWorld from './components/HelloWorld.vue'
 import Count from './components/Count.vue'
 import DefineModel from './components/DefineModel.vue'
+import Attribute from './components/Attribute.vue'
 
 const state = ref({
   count: 0
@@ -47,6 +48,9 @@ const incrementCb = (count,a,b) => {
   console.error('incrementCb',b)
 }
 
+const handlePropsClick = () => {
+  console.error('父组件click执行了');
+}
 
 </script>
 
@@ -61,6 +65,7 @@ const incrementCb = (count,a,b) => {
     <Count :initialCount="999" @incrementCb="incrementCb"/>
     <h1> {{text}} </h1>
     <DefineModel v-model:title.trimAll="text"></DefineModel>
+    <Attribute @click="handlePropsClick"></Attribute>
   </header>
 
 </template>
