@@ -1,9 +1,11 @@
 <script setup>
-import { ref, reactive, computed,watch, onMounted,watchEffect,watchPostEffect,onUpdated, onBeforeUpdate,onBeforeMount } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, reactive, computed,watch, onMounted,watchEffect,watchPostEffect,onUpdated, onBeforeUpdate,onBeforeMount,defineAsyncComponent } from 'vue'
+// import HelloWorld from './components/HelloWorld.vue'
 import Count from './components/Count.vue'
 import DefineModel from './components/DefineModel.vue'
-import Attribute from './components/Attribute.vue'
+// import Attribute from './components/Attribute.vue'
+import Slot from './components/Slot.vue'
+import Loading from './components/Loading.vue'
 
 const state = ref({
   count: 0
@@ -52,22 +54,55 @@ const handlePropsClick = () => {
   console.error('父组件click执行了');
 }
 
+// 研究异步组件 搭配 Suspense
+const HelloWorld = defineAsyncComponent({ 
+  loader: () => { 
+    return new Promise((resolve, reject) => {
+      const C = import('./components/HelloWorld.vue')
+      setTimeout(() => {
+        resolve(C)
+      }, 3000)
+    })
+  },
+  loadingComponent: Loading
+})
+const Attribute = defineAsyncComponent({
+  loader: () => {
+    return new Promise((resolve,reject) => {
+      const C = import('./components/Attribute.vue')
+      setTimeout(() => {
+        resolve(C)
+      }, 4000)
+    })
+  },
+  loadingComponent: Loading
+})
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <Suspense>
+    <header>
+      <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg= "You did it!"/>
-    </div>
+      <div class="wrapper">
+        <HelloWorld msg= "You did it!"/>
+      </div>
 
-    <Count :initialCount="999" @incrementCb="incrementCb"/>
-    <h1> {{text}} </h1>
-    <DefineModel v-model:title.trimAll="text"></DefineModel>
-    <Attribute @click="handlePropsClick"></Attribute>
-  </header>
+      <Count :initialCount="999" @incrementCb="incrementCb"/>
+      <h1> {{text}} </h1>
+      <DefineModel v-model:title.trimAll="text"></DefineModel>
+      <Attribute @click="handlePropsClick"></Attribute>
+    </header>
+    <template #fallback>
+      Loading...  
+    </template>
+  </Suspense>
 
+    <Slot> 
+      <div>默认传入</div> 
+      <template #red>我是具名插槽</template> 
+    </Slot>
 </template>
 
 <style scoped>
