@@ -1,18 +1,19 @@
 name: learn-github-actions
 run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+on: [push] # 这表示工作流程将在推送（push）事件发生时触发
 jobs:
-  build-dev:
-    if: ${{ github.ref == 'refs/heads/dev' }}
-    runs-on: ubuntu-latest
+  build-dev: # 任务名
+    if: ${{ github.ref == 'refs/heads/dev' }} # 当分支为dev时执行
+    runs-on: ubuntu-latest # 这表示任务将在最新版本的Ubuntu虚拟环境中运行
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: echo "dev $GITHUB_REF"
-  build-stable:
-    if: ${{ github.ref == 'refs/heads/stable' }}
+      - run: npm install
+      - run: npm run build
+  build-stable: # 任务名
+    if: ${{ github.ref == 'refs/heads/stable' }} # 当分支为stable时执行
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
