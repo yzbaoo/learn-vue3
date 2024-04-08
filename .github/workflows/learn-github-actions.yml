@@ -12,6 +12,11 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm run build
+      - name: Upload artifact # 上传构建产物
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: dist
   build-stable: # 任务名
     if: ${{ github.ref == 'refs/heads/stable' }} # 当分支为stable时执行
     runs-on: ubuntu-latest
