@@ -1,0 +1,45 @@
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [push] # 这表示工作流程将在推送（push）事件发生时触发
+jobs:
+  build-dev: # 任务名
+    if: ${{ github.ref == 'refs/heads/dev' }} # 当分支为dev时执行
+    runs-on: ubuntu-latest # 这表示任务将在最新版本的Ubuntu虚拟环境中运行
+    steps:
+      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm run build
+
+      - name: Copy files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          source: dist/
+          target: /web-github-actions/
+
+      - name: open web server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          script: |
+            cd /web-github-actions/
+            python -m http.server 8080
+
+
+
+  build-stable: # 任务名
+    if: ${{ github.ref == 'refs/heads/stable' }} # 当分支为stable时执行
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: echo "stable $GITHUB_REF"
