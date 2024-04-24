@@ -6,7 +6,7 @@ import DefineModel from './components/DefineModel.vue'
 // import Attribute from './components/Attribute.vue'
 import Slot from './components/Slot.vue'
 import Loading from './components/Loading.vue'
-
+console.log(1)
 const state = ref({
   count: 0
 })
