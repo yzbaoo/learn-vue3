@@ -106,6 +106,13 @@ const Attribute = defineAsyncComponent({
       <div>默认传入</div> 
       <template #red>我是具名插槽</template> 
     </Slot>
+
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/videoStream">VideoStreamView</RouterLink>
+    </nav>
+    <RouterView />
 </template>
 
 <style scoped>
